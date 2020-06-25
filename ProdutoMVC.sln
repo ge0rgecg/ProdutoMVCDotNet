@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC", "BematechMVC\MVC.csproj", "{59FDFCE1-CC4B-4B7D-BA34-473E9EB0E547}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC", "ProdutoMVC\MVC.csproj", "{59FDFCE1-CC4B-4B7D-BA34-473E9EB0E547}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SQL", "SQL\SQL.sqlproj", "{251B9877-C547-4A59-970F-08D9DB7B1375}"
 EndProject
