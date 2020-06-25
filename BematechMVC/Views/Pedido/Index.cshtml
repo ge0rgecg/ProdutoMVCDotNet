@@ -1,0 +1,123 @@
+﻿@model BematechMVC.Models.BuscaPedidoViewModel
+@{
+    ViewBag.Title = "Consulta de Pedido de Vendas";
+}
+
+<h2>Consulta de Pedido de Vendas</h2>
+
+<div>
+    <hr />
+    @using (Html.BeginForm())
+    {
+
+        <div class="row">
+            <div class="form-group col-xs-4 col-md-4">
+                @Html.LabelFor(model => model.IdCliente)
+                @Html.DropDownListFor(model => model.IdCliente, Model.ListaCliente, new { @class = "form-control dropdown-toggle" })
+            </div>
+            <div class="form-group col-xs-4 col-md-4">
+                @Html.LabelFor(model => model.IdPedido)
+                @Html.EditorFor(model => model.IdPedido, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.IdPedido, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <fieldset class="form-group col-xs-8 col-md-8">
+                <legend class="scheduler-border">Periodo Data Entrega</legend>
+                <div class="control-group">
+                    <div class="form-inline col-xs-6 col-md-6">
+                        @Html.EditorFor(model => model.DataInicial, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                    </div>
+                    <div class="form-inline col-xs-6 col-md-6">
+                        @Html.EditorFor(model => model.DataFinal, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                    </div>
+                </div>
+            </fieldset>
+            <div class="form-group col-xs-3 col-md-3" style="padding-top:45px;">
+                <button type="button" class="btn btn-primary" onclick="buscarPedido();">
+                    <i class="glyphicon glyphicon-search"></i> Pesquisar
+                </button>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <span>Resultado</span>
+        <hr />
+        <table id="tabPedidos" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Cliente</th>
+                    <th>Valor Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pedido in Model.ListaPedidos)
+                {
+                    <tr>
+                        <td>@pedido.Id_Pedido</td>
+                        <td>
+                            @if (pedido.Cliente != null)
+                            {
+                                @Html.Raw(pedido.Cliente.Nome)
+                            }
+                            else
+                            {
+                                @Html.Raw("Cliente Generico")
+                            }
+                        </td>
+                        <td>@pedido.ValorTotal</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@*<style>
+        thead {
+            background-color: #428bca;
+            color: white;
+        }
+    </style>*@
+
+@section scripts{
+    <script>
+        var datatable;
+        $(document).ready(function () {
+            datatable = $('#tabPedidos').DataTable({
+                info: false,
+                searching: false,
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ linhas",
+                    "zeroRecords": "Nenhum dado foi encontrado",
+                    "info": "Mostrando pagina _PAGE_ de _PAGES_",
+                    "infoEmpty": "Sem dados disponiveis",
+                    "paginate": {
+                        "previous": "Anterior",
+                        "next": "Proximo"
+                    },
+                    "columns": [
+                        { "name": "NumeroPedido" },
+                        { "name": "NomeCliente" },
+                        { "name": "ValorTotal" }
+                        
+                    ],
+                }
+            });
+        });
+        buscarPedido = function (){
+            $.post('@Url.Action("ObterPedidos")', $("form").serialize())
+                .done(function (data) {
+                    datatable.clear();
+                    $.each(data, function (key, item) {
+                        var value = [item.NumeroPedido, item.NomeCliente, item.ValorTotal];
+                        datatable.row.add(value);
+                    });
+                    datatable.draw();
+                }).fail(function (data) {
+                    alert("ocorreu um erro, por favor tente novamente!");
+                });
+        };
+    </script>
+}
